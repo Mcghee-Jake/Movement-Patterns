@@ -1,6 +1,7 @@
 package com.example.jmcghee.movementpatterns.activities;
 
 import android.app.DialogFragment;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -9,13 +10,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.example.jmcghee.movementpatterns.MovementAdapter;
+import com.example.jmcghee.movementpatterns.MovementDialogFragment;
 import com.example.jmcghee.movementpatterns.R;
 import com.example.jmcghee.movementpatterns.data.MovementDBHelper;
 
 
-public class MovementIndexActivity extends AppCompatActivity {
+public class MovementIndexActivity extends AppCompatActivity implements MovementDialogFragment.MovementDataPasser{
 
     private SQLiteDatabase mDb;
+    private MovementAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +37,14 @@ public class MovementIndexActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        MovementAdapter adapter = new MovementAdapter(movementList);
+        adapter = new MovementAdapter(movementList);
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onMovementDataPassed(ContentValues cv) {
+        mDb.insert(MovementDBHelper.TABLE_NAME, null, cv);
+        adapter.updateCursor(getAllMovements());
     }
 
     private Cursor getAllMovements() {

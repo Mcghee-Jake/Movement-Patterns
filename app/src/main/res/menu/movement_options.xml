@@ -3,5 +3,4 @@
     <item
         android:id="@+id/delete_movement"
         android:title="Delete" />
-
 </menu>

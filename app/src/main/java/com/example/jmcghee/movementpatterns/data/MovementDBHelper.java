@@ -1,11 +1,16 @@
 package com.example.jmcghee.movementpatterns.data;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class MovementDBHelper extends SQLiteOpenHelper {
+import com.example.jmcghee.movementpatterns.Movement;
 
+import java.util.ArrayList;
+import java.util.List;
+
+public class MovementDBHelper extends SQLiteOpenHelper {
 
     // Movement Contract
     public static final String TABLE_NAME = "movements";
@@ -29,5 +34,21 @@ public class MovementDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         
+    }
+
+    public static List<Movement> makeMovementList(Cursor cursor) {
+
+        List<Movement> movementList = new ArrayList<>();
+        Movement movement;
+
+        if (cursor.moveToFirst()) {
+            do {
+                String movementName = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
+                movement = new Movement(movementName);
+                movementList.add(movement);
+            } while (cursor.moveToNext());
+        }
+
+        return movementList;
     }
 }

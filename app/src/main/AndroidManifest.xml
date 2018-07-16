@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.MovementIndexActivity" />
-        <activity android:name=".activities.SequenceGeneratorActivity"></activity>
+        <activity android:name=".activities.SequenceGeneratorActivity" />
+        <activity android:name=".activities.MovementIntegrationActivity"></activity>
     </application>
 
 </manifest>

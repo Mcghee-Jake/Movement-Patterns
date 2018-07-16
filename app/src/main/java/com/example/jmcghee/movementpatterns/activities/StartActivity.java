@@ -25,5 +25,16 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Button btnSequenceGenerator = findViewById(R.id.btn_sequence_generator);
+        btnSequenceGenerator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start Sequence Generator on clock
+                Class sequenceGeneratorActivity = SequenceGeneratorActivity.class;
+                Intent intent = new Intent(StartActivity.this, sequenceGeneratorActivity);
+                startActivity(intent);
+            }
+        });
     }
 }

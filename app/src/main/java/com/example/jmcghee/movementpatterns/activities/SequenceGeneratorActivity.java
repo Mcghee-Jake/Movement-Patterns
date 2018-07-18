@@ -1,9 +1,11 @@
 package com.example.jmcghee.movementpatterns.activities;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -56,6 +58,16 @@ public class SequenceGeneratorActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         adapter = new SequenceAdapter();
         recyclerView.setAdapter(adapter);
+        generateSequence();
+
+        // Set up the fab
+        FloatingActionButton fab = findViewById(R.id.fab_new_sequence);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                generateSequence();
+            }
+        });
 
         // Set up the bottom sheet header
         LinearLayout bottomSheetLayout = findViewById(R.id.bottom_sheet_layout);
@@ -146,32 +158,39 @@ public class SequenceGeneratorActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.btn_generate_sequence:
-                movementList = MovementDBHelper.makeMovementList(getAllMovements());
-                Collections.shuffle(movementList);
-                if (focus_movement_entry == null) {
-                    movementList = movementList.subList(0, seekBar.getProgress());
-                } else {
-                    Movement focusMovement = null;
-                    // Find the movement in the list
-                    for (Movement movement : movementList) {
-                        if (movement.getName().equals(focus_movement_entry)) {
-                            focusMovement = movement;
-                        }
-                    }
-                    // Separate the movement temporarily
-                    movementList.remove(movementList.indexOf(focusMovement));
-                    // Get a list of movements that is one smaller than than the sequence length
-                    movementList = movementList.subList(0, seekBar.getProgress() - 1);
-                    // Add the focusMovement to the sublist
-                    movementList.add(focusMovement);
-                    // Shuffle the list again
-                    Collections.shuffle(movementList);
-                }
-                adapter.updateList(movementList);
+            case R.id.btn_index:
+                // Start MovementIndexActivity on click
+                Class movementIndexActivity = MovementIndexActivity.class;
+                Intent intent = new Intent(SequenceGeneratorActivity.this, movementIndexActivity);
+                startActivity(intent);
             default:
                 return false;
         }
+    }
+
+    private void generateSequence() {
+        movementList = MovementDBHelper.makeMovementList(getAllMovements());
+        Collections.shuffle(movementList);
+        if (focus_movement_entry == null) {
+            movementList = movementList.subList(0, seekBar.getProgress());
+        } else {
+            Movement focusMovement = null;
+            // Find the movement in the list
+            for (Movement movement : movementList) {
+                if (movement.getName().equals(focus_movement_entry)) {
+                    focusMovement = movement;
+                }
+            }
+            // Separate the movement temporarily
+            movementList.remove(movementList.indexOf(focusMovement));
+            // Get a list of movements that is one smaller than than the sequence length
+            movementList = movementList.subList(0, seekBar.getProgress() - 1);
+            // Add the focusMovement to the sublist
+            movementList.add(focusMovement);
+            // Shuffle the list again
+            Collections.shuffle(movementList);
+        }
+        adapter.updateList(movementList);
     }
 
     private Cursor getAllMovements() {

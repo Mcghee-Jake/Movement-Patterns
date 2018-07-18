@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.SequenceGeneratorActivity">
 
     <!-- include the recycler view -->
@@ -11,5 +11,14 @@
 
     <!-- include bottom sheet -->
     <include layout="@layout/bottom_sheet_sequence" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_new_sequence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/bottom_sheet_layout"
+        app:layout_anchorGravity="top|end"
+        android:layout_margin="32dp"
+        android:src="@drawable/ic_refresh"/>
 
 </android.support.design.widget.CoordinatorLayout>

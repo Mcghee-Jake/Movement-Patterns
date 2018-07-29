@@ -5,8 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.jmcghee.movementpatterns.Movement;
-
 import java.util.ArrayList;
 import java.util.List;
 

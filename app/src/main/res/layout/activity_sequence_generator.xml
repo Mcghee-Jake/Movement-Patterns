@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activities.SequenceGeneratorActivity">
+    tools:context=".activities.SequenceGeneratorActivity"
+    android:background="@color/colorBackground">
 
     <!-- include the recycler view -->
     <include layout="@layout/content_sequence_generator" />
@@ -18,7 +19,7 @@
         android:layout_height="wrap_content"
         app:layout_anchor="@id/bottom_sheet_layout"
         app:layout_anchorGravity="top|end"
-        android:layout_margin="32dp"
+        android:layout_marginEnd="32dp"
         android:src="@drawable/ic_refresh"/>
 
 </android.support.design.widget.CoordinatorLayout>

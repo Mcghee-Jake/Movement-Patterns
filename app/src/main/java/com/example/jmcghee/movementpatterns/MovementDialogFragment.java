@@ -23,14 +23,14 @@ public class MovementDialogFragment extends DialogFragment {
         void onMovementDataPassed(ContentValues cv);
     }
 
-    MovementDataPasser movementDataPasser;
+    private MovementDataPasser movementDataPasser;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         movementDataPasser = (MovementDataPasser) context;
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.dialogfragment_movement, container, false);

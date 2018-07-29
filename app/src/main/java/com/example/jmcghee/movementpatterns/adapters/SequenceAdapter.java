@@ -1,5 +1,6 @@
 package com.example.jmcghee.movementpatterns.adapters;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,16 +10,20 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.jmcghee.movementpatterns.Movement;
+import com.example.jmcghee.movementpatterns.data.Movement;
 import com.example.jmcghee.movementpatterns.R;
 
 import java.util.List;
 
 public class SequenceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    List<Movement> movementList;
-
+    private Context context;
+    private List<Movement> movementList;
     private final int MOVEMENT = 0, ADD_BTN = 1;
+
+    public interface SequenceExtender {
+        void extendSequence();
+    }
 
     class SequenceViewHolder extends RecyclerView.ViewHolder {
 
@@ -34,12 +39,23 @@ public class SequenceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     class ExtendSequenceViewHolder extends RecyclerView.ViewHolder {
 
+        SequenceExtender sequenceExtender = (SequenceExtender) context;
         ImageButton btnExtendSequence;
 
         public ExtendSequenceViewHolder(View itemView) {
             super(itemView);
             btnExtendSequence = itemView.findViewById(R.id.btn_extend_sequence);
+            btnExtendSequence.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sequenceExtender.extendSequence();
+                }
+            });
         }
+    }
+
+    public SequenceAdapter(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -101,5 +117,9 @@ public class SequenceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (movementList != null) {
             this.notifyDataSetChanged();
         }
+    }
+
+    public List<Movement> getMovementList() {
+        return movementList;
     }
 }

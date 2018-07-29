@@ -8,11 +8,16 @@
     android:orientation="vertical"
     app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-    android:background="@android:color/background_light">
+    android:background="@color/colorBottomSheetBackground">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite">
+
+        <View android:background="#cfcfcf"
+            android:layout_width = "match_parent"
+            android:layout_height="1dp"/>
 
         <View
             android:id="@+id/bottom_sheet_header"
@@ -28,6 +33,11 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"/>
 
+        <View android:background="#cfcfcf"
+            android:layout_width = "match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"/>
+
     </FrameLayout>
 
     <TextView
@@ -36,14 +46,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
         android:layout_marginTop="16dp"
-        android:text="Sequence Size: 3"/>
+        android:text="Sequence Size:"/>
 
     <SeekBar
         android:id="@+id/sb_sequence_size"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:min="2"
-        android:progress="3"
         android:layout_marginTop="8dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="36dp"/>

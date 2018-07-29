@@ -22,16 +22,17 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.example.jmcghee.movementpatterns.Movement;
 import com.example.jmcghee.movementpatterns.R;
 import com.example.jmcghee.movementpatterns.adapters.SequenceAdapter;
+import com.example.jmcghee.movementpatterns.data.Movement;
 import com.example.jmcghee.movementpatterns.data.MovementDBHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
-public class SequenceGeneratorActivity extends AppCompatActivity {
+public class SequenceGeneratorActivity extends AppCompatActivity implements SequenceAdapter.SequenceExtender {
 
     private SQLiteDatabase mDb;
     private SequenceAdapter adapter;
@@ -56,9 +57,8 @@ public class SequenceGeneratorActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        adapter = new SequenceAdapter();
+        adapter = new SequenceAdapter(this);
         recyclerView.setAdapter(adapter);
-        generateSequence();
 
         // Set up the fab
         FloatingActionButton fab = findViewById(R.id.fab_new_sequence);
@@ -69,6 +69,35 @@ public class SequenceGeneratorActivity extends AppCompatActivity {
             }
         });
 
+        // Set up the bottom sheet
+        setupBottomSheet();
+
+        // Generate a sequence
+        generateSequence();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.sequence_generator_options, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.btn_index:
+                // Start MovementIndexActivity on click
+                Class movementIndexActivity = MovementIndexActivity.class;
+                Intent intent = new Intent(SequenceGeneratorActivity.this, movementIndexActivity);
+                startActivity(intent);
+            default:
+                return false;
+        }
+    }
+
+    private void setupBottomSheet() {
         // Set up the bottom sheet header
         LinearLayout bottomSheetLayout = findViewById(R.id.bottom_sheet_layout);
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
@@ -88,11 +117,14 @@ public class SequenceGeneratorActivity extends AppCompatActivity {
         // Set up the seekbar
         final TextView sequenceSizeTextView = findViewById(R.id.tv_sequence_size);
         seekBar = findViewById(R.id.sb_sequence_size);
-        int sequenceMax = getResources().getInteger(R.integer.max_sequence_num);
-        if (getAllMovements().getCount() <= sequenceMax) {
+        int defaultSequnceSize = getResources().getInteger(R.integer.default_sequence_length);
+        seekBar.setProgress(defaultSequnceSize);
+        sequenceSizeTextView.setText("Sequence Size: " + defaultSequnceSize);
+        int defaultSequenceMax = getResources().getInteger(R.integer.max_sequence_length);
+        if (getAllMovements().getCount() <= defaultSequenceMax) {
             seekBar.setMax(getAllMovements().getCount());
         } else {
-            seekBar.setMax(sequenceMax);
+            seekBar.setMax(defaultSequenceMax);
         }
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -133,39 +165,20 @@ public class SequenceGeneratorActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                /*
                 String entered_text = actv.getText().toString();
                 boolean nameFound = false;
                 for (String movementName : movementNames) {
                     if (movementName.equals(entered_text)) nameFound = true;
                 }
                 focus_movement_entry = nameFound ? null : entered_text;
+                */
             }
 
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.sequence_generator_options, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.btn_index:
-                // Start MovementIndexActivity on click
-                Class movementIndexActivity = MovementIndexActivity.class;
-                Intent intent = new Intent(SequenceGeneratorActivity.this, movementIndexActivity);
-                startActivity(intent);
-            default:
-                return false;
-        }
     }
 
     private void generateSequence() {
@@ -177,12 +190,11 @@ public class SequenceGeneratorActivity extends AppCompatActivity {
             Movement focusMovement = null;
             // Find the movement in the list
             for (Movement movement : movementList) {
-                if (movement.getName().equals(focus_movement_entry)) {
-                    focusMovement = movement;
-                }
+                if (movement.getName().equals(focus_movement_entry)) focusMovement = movement;
             }
+
             // Separate the movement temporarily
-            movementList.remove(movementList.indexOf(focusMovement));
+            movementList.remove(focusMovement);
             // Get a list of movements that is one smaller than than the sequence length
             movementList = movementList.subList(0, seekBar.getProgress() - 1);
             // Add the focusMovement to the sublist
@@ -205,4 +217,20 @@ public class SequenceGeneratorActivity extends AppCompatActivity {
         );
     }
 
+    @Override
+    public void extendSequence() {
+        List<Movement> totalMovements = MovementDBHelper.makeMovementList(getAllMovements());
+        List<Movement> activeMovementList = adapter.getMovementList();
+        Random rand = new Random();
+        Movement addMovement;
+
+        for (Movement movement : activeMovementList) {
+            totalMovements.remove(movement);
+        }
+
+        addMovement = totalMovements.get(rand.nextInt(totalMovements.size()));
+        activeMovementList.add(addMovement);
+
+        adapter.updateList(activeMovementList);
+    }
 }

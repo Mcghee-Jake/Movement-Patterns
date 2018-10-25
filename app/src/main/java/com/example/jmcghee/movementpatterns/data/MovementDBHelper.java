@@ -10,12 +10,48 @@ import java.util.List;
 
 public class MovementDBHelper extends SQLiteOpenHelper {
 
-    // Movement Contract
-    public static final String TABLE_NAME = "movements";
-    public static final String COLUMN_NAME = "name";
-
+    // Database Info
     private static final String DATABASE_NAME = "movementPatterns.db";
     private static final int DATABASE_VERSION = 1;
+
+    // Table Names
+    public static final String TABLE_MOVEMENT = "movement";
+    public static final String TABLE_CATEGORY = "category";
+    public static final String TABLE_MOVEMENT_CATEGORIES = "movement_categories";
+
+    // Column Names
+
+        // Common Column Names
+        public static final String KEY_ID = "id";
+
+        // Movement Table - Column Names
+        public static final String KEY_MOVEMENT_NAME = "name";
+
+        // Category Table - Column Names
+        public static final String KEY_CATEGORY_NAME ="category";
+
+        // Movement_Category Table - Column Names
+        public static final String KEY_MOVEMENT_ID = "movement_id";
+        public static final String KEY_CATEGORY_ID = "category_id";
+
+    // Create Table Statements
+
+        // Movement Table Create Statement
+        final String CREATE_MOVEMENT_TABLE = "CREATE TABLE " + TABLE_MOVEMENT + " (" +
+                KEY_ID + "INTEGER PRIMARY KEY, " +
+                KEY_MOVEMENT_NAME + " TEXT" + ")";
+
+        // Category Table Create Statement
+        final String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + " (" +
+                KEY_ID + "INTEGER PRIMARY KEY, " +
+                KEY_CATEGORY_NAME + " TEXT" + ")";
+
+        // Movement_Category Create Statement
+        final String CREATE_MOVEMENT_CATEGORY_TABLE = "CREATE TABLE " + TABLE_MOVEMENT_CATEGORIES + " (" +
+                KEY_ID + "INTEGER PRIMARY KEY, " +
+                KEY_MOVEMENT_ID + " INTEGER, " +
+                KEY_CATEGORY_ID + " INTEGER" + ")";
+                
 
     public MovementDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -23,10 +59,9 @@ public class MovementDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String SQL_CREATE_MOVEMENT_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
-                COLUMN_NAME + " TEXT PRIMARY KEY)";
-
-        db.execSQL(SQL_CREATE_MOVEMENT_TABLE);
+        db.execSQL(CREATE_MOVEMENT_TABLE);
+        db.execSQL(CREATE_CATEGORY_TABLE);
+        db.execSQL(CREATE_MOVEMENT_CATEGORY_TABLE);
     }
 
     @Override
@@ -41,12 +76,33 @@ public class MovementDBHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                String movementName = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
-                movement = new Movement(movementName);
+                movement = getMovement(cursor);
                 movementList.add(movement);
             } while (cursor.moveToNext());
         }
 
         return movementList;
     }
+
+
+    public static Movement getMovement(Cursor cursor) {
+        String movementName = cursor.getString(cursor.getColumnIndex(KEY_MOVEMENT_NAME));
+
+        return new Movement(movementName);
+    }
+
+    public static List<String> makeCategoryList(Cursor cursor) {
+
+        List<String> categoriesList = new ArrayList<>();
+
+        if (cursor.moveToFirst()) {
+            do {
+                String category = cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME));
+                categoriesList.add(category);
+            } while (cursor.moveToNext());
+        }
+
+        return categoriesList;
+    }
+
 }

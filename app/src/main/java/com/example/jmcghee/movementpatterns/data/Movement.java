@@ -1,11 +1,11 @@
 package com.example.jmcghee.movementpatterns.data;
 
-import java.util.List;
+import java.io.Serializable;
 
-public class Movement {
+public class Movement implements Serializable {
 
+    private int id;
     private String name;
-    private List<String> tags;
 
     public Movement(String name) {
         this.name = name;
@@ -17,14 +17,6 @@ public class Movement {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
     }
 
     @Override

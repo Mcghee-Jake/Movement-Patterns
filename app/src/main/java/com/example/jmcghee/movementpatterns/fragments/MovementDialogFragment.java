@@ -1,4 +1,4 @@
-package com.example.jmcghee.movementpatterns;
+package com.example.jmcghee.movementpatterns.fragments;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,9 +15,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.jmcghee.movementpatterns.R;
+import com.example.jmcghee.movementpatterns.activities.MovementIndexActivity;
 import com.example.jmcghee.movementpatterns.data.MovementDBHelper;
 
 public class MovementDialogFragment extends DialogFragment {
+    private static final String CATEGORY_TAG = MovementIndexActivity.CATEGORY_TAG;
 
     public interface MovementDataPasser {
         void onMovementDataPassed(ContentValues cv);
@@ -36,7 +39,6 @@ public class MovementDialogFragment extends DialogFragment {
         final View view = inflater.inflate(R.layout.dialogfragment_movement, container, false);
 
         final EditText etMovementName = view.findViewById(R.id.et_movement_name);
-        etMovementName.requestFocus();
 
         // Dismiss dialog
         Button btnCancel = view.findViewById(R.id.btn_cancel);
@@ -52,11 +54,14 @@ public class MovementDialogFragment extends DialogFragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Get name
                 String movementName = etMovementName.getText().toString();
-                if (movementName.length() == 0) return; // Exit if nothing was entered
+                if (movementName.isEmpty()) return; // Exit if nothing was entered
+
                 ContentValues movementData = new ContentValues();
-                movementData.put(MovementDBHelper.COLUMN_NAME, movementName);
+                movementData.put(MovementDBHelper.KEY_MOVEMENT_NAME, movementName);
                 movementDataPasser.onMovementDataPassed(movementData);
+
                 dismiss();
             }
         });

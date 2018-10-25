@@ -52,28 +52,31 @@ public class SequenceGeneratorActivity extends AppCompatActivity implements Sequ
         // Get the data
         movementList = MovementDBHelper.makeMovementList(getAllMovements());
 
-        // Set up the RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.rv_sequence);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-        adapter = new SequenceAdapter(this);
-        recyclerView.setAdapter(adapter);
+        if (movementList.size() > 2) {
 
-        // Set up the fab
-        FloatingActionButton fab = findViewById(R.id.fab_new_sequence);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                generateSequence();
-            }
-        });
+            // Set up the RecyclerView
+            RecyclerView recyclerView = findViewById(R.id.rv_sequence);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setHasFixedSize(true);
+            adapter = new SequenceAdapter(this);
+            recyclerView.setAdapter(adapter);
 
-        // Set up the bottom sheet
-        setupBottomSheet();
+            // Set up the fab
+            FloatingActionButton fab = findViewById(R.id.fab_new_sequence);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    generateSequence();
+                }
+            });
 
-        // Generate a sequence
-        generateSequence();
+            // Set up the bottom sheet
+            setupBottomSheet();
+
+            // Generate a sequence
+            generateSequence();
+        }
     }
 
     @Override
@@ -207,13 +210,13 @@ public class SequenceGeneratorActivity extends AppCompatActivity implements Sequ
 
     private Cursor getAllMovements() {
         return mDb.query(
-                MovementDBHelper.TABLE_NAME,
+                MovementDBHelper.TABLE_MOVEMENT,
                 null,
                 null,
                 null,
                 null,
                 null,
-                MovementDBHelper.COLUMN_NAME
+                MovementDBHelper.KEY_MOVEMENT_NAME
         );
     }
 

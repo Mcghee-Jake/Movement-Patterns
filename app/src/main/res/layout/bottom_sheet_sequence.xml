@@ -15,10 +15,6 @@
         android:layout_height="wrap_content"
         android:background="@color/colorWhite">
 
-        <View android:background="#cfcfcf"
-            android:layout_width = "match_parent"
-            android:layout_height="1dp"/>
-
         <View
             android:id="@+id/bottom_sheet_header"
             android:layout_width="match_parent"
@@ -40,35 +36,51 @@
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/tv_sequence_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="16dp"
-        android:text="Sequence Size:"/>
-
-    <SeekBar
-        android:id="@+id/sb_sequence_size"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:min="2"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="36dp"/>
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
 
-    <AutoCompleteTextView
-        android:id="@+id/actv_focus_movement"
-        android:hint="Focus Movement"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textCapWords"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
-        />
+            <TextView
+                android:id="@+id/tv_sequence_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="16dp"
+                android:text="Sequence Size:"/>
+
+            <SeekBar
+                android:id="@+id/sb_sequence_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:min="2"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="36dp"/>
+
+
+            <AutoCompleteTextView
+                android:id="@+id/actv_focus_movement"
+                android:hint="Focus Movement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="48dp"
+                android:layout_marginEnd="48dp"
+                />
+
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
 
 
 </LinearLayout>

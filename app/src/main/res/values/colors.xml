@@ -2,8 +2,10 @@
 <resources>
     <color name="colorPrimary">#2fd796</color>
     <color name="colorPrimaryDark">#26af7b</color>
+    <color name="colorPrimaryLight">#46d69e</color>
     <color name="colorAccent">#b336e4</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorBackground">#efefef</color>
     <color name="colorBottomSheetBackground">#fafafa</color>
+    <color name="black">#000</color>
 </resources>

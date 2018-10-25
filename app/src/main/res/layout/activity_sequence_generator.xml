@@ -7,12 +7,6 @@
     tools:context=".activities.SequenceGeneratorActivity"
     android:background="@color/colorBackground">
 
-    <!-- include the recycler view -->
-    <include layout="@layout/content_sequence_generator" />
-
-    <!-- include bottom sheet -->
-    <include layout="@layout/bottom_sheet_sequence" />
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_new_sequence"
         android:layout_width="wrap_content"
@@ -21,5 +15,18 @@
         app:layout_anchorGravity="top|end"
         android:layout_marginEnd="32dp"
         android:src="@drawable/ic_refresh"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@drawable/shape_gradient_top_shadow"
+        app:layout_anchor="@id/bottom_sheet_layout" />
+
+    <!-- include the recycler view -->
+    <include layout="@layout/content_sequence_generator" />
+
+    <!-- include bottom sheet -->
+    <include layout="@layout/bottom_sheet_sequence" />
+
 
 </android.support.design.widget.CoordinatorLayout>

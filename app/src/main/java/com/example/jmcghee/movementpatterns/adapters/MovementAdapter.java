@@ -1,7 +1,6 @@
 package com.example.jmcghee.movementpatterns.adapters;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,21 +12,24 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.jmcghee.movementpatterns.R;
-import com.example.jmcghee.movementpatterns.data.MovementDBHelper;
+import com.example.jmcghee.movementpatterns.data.Movement;
+
+import java.util.List;
 
 public class MovementAdapter extends RecyclerView.Adapter<MovementAdapter.MovementViewHolder>{
 
     private Context context;
-    private Cursor movementList;
+    private List<Movement> movementList;
     private MovementOptionsClickListener movementOptionsClickListener;
 
     public interface MovementOptionsClickListener {
-        void deleteMovement(String movementName);
+        void editMovement(Movement movement);
+        void deleteMovement(Movement movement);
     }
 
-    public MovementAdapter(Context context, Cursor cursor) {
+    public MovementAdapter(Context context, List<Movement> movementList) {
         this.context = context;
-        this.movementList = cursor;
+        this.movementList = movementList;
         movementOptionsClickListener = (MovementOptionsClickListener) context;
     }
 
@@ -55,9 +57,10 @@ public class MovementAdapter extends RecyclerView.Adapter<MovementAdapter.Moveme
 
     @Override
     public void onBindViewHolder(@NonNull final MovementAdapter.MovementViewHolder holder, int position) {
-        if (!movementList.moveToPosition(position)) return;
-        final String movementName = movementList.getString(movementList.getColumnIndex(MovementDBHelper.COLUMN_NAME));
+        final Movement movement = movementList.get(position);
+        final String movementName = movement.getName();
         holder.tvMovementName.setText(movementName);
+        final String movementCatagoryy = movement.getCategory();
         holder.btnMovementOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,8 +70,11 @@ public class MovementAdapter extends RecyclerView.Adapter<MovementAdapter.Moveme
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
+                            case R.id.edit_movement:
+                                movementOptionsClickListener.editMovement(movement);
+                                return true;
                             case R.id.delete_movement:
-                                movementOptionsClickListener.deleteMovement(movementName);
+                                movementOptionsClickListener.deleteMovement(movement);
                                 return true;
                             default:
                                 return false;
@@ -82,13 +88,12 @@ public class MovementAdapter extends RecyclerView.Adapter<MovementAdapter.Moveme
 
     @Override
     public int getItemCount() {
-        return movementList.getCount();
+        return movementList.size();
     }
 
-    public void updateCursor(Cursor newCursor) {
-        if (movementList != null) movementList.close();
-        movementList = newCursor;
-        if (newCursor != null) {
+    public void updateMovementsList(List<Movement> movementList) {
+        this.movementList = movementList;
+        if (movementList != null) {
             this.notifyDataSetChanged();
         }
     }

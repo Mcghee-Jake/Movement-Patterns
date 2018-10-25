@@ -15,6 +15,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.jmcghee.movementpatterns.R;
@@ -102,6 +104,21 @@ public class MovementIndexActivity extends AppCompatActivity implements
         public CharSequence getPageTitle(int position) {
             return categories.get(position);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.index_options, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.add_category) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private List<Movement> getAllMovementsFromCategory(String category) {

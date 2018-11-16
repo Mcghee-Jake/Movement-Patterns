@@ -23,6 +23,7 @@ import com.example.jmcghee.movementpatterns.R;
 import com.example.jmcghee.movementpatterns.adapters.MovementAdapter;
 import com.example.jmcghee.movementpatterns.data.Movement;
 import com.example.jmcghee.movementpatterns.data.MovementDBHelper;
+import com.example.jmcghee.movementpatterns.fragments.CategoryDialogFragment;
 import com.example.jmcghee.movementpatterns.fragments.MovementDialogFragment;
 import com.example.jmcghee.movementpatterns.fragments.MovementIndexFragment;
 
@@ -31,6 +32,7 @@ import java.util.List;
 
 public class MovementIndexActivity extends AppCompatActivity implements
         MovementDialogFragment.MovementDataPasser,
+        CategoryDialogFragment.CategoryDataPasser,
         MovementAdapter.MovementOptionsClickListener {
 
     private static final String MOVEMENT_DIALOG_TAG = "movement_dialog_tag";
@@ -71,10 +73,6 @@ public class MovementIndexActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 DialogFragment dialogFragment = new MovementDialogFragment();
-                Bundle bundle = new Bundle();
-                String category = categories.get(viewPager.getCurrentItem());
-                bundle.putString(CATEGORY_TAG, category);
-                dialogFragment.setArguments(bundle);
                 dialogFragment.show(getSupportFragmentManager(), MOVEMENT_DIALOG_TAG);
             }
         });
@@ -116,6 +114,7 @@ public class MovementIndexActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.add_category) {
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -147,18 +146,44 @@ public class MovementIndexActivity extends AppCompatActivity implements
                 MovementDBHelper.KEY_CATEGORY_NAME
         );
 
+        cursor.close();
+
         return MovementDBHelper.makeCategoryList(cursor);
     }
 
 
-
     @Override
     public void onMovementDataPassed(ContentValues cv) {
-        mDb.insert(MovementDBHelper.TABLE_MOVEMENT, null, cv);
+        // Insert movement into movement table
+        long movementId = mDb.insert(MovementDBHelper.TABLE_MOVEMENT, null, cv);
+
+        // Insert movement into movement/category linking table
+        Cursor cursor = mDb.query(
+                MovementDBHelper.TABLE_CATEGORY,
+                new String[]{MovementDBHelper.KEY_MOVEMENT_ID},
+                MovementDBHelper.KEY_CATEGORY_NAME + "=?",
+                new String[]{categories.get(viewPager.getCurrentItem())},
+                null,
+                null,
+                null
+                );
+
+        long categoryId = cursor.getLong(cursor.getColumnIndex(MovementDBHelper.KEY_MOVEMENT_ID));
+
         ContentValues movementCategories = new ContentValues();
-        movementCategories.put(MovementDBHelper.KEY_MOVEMENT_ID, );
-        movementCategories.put(MovementDBHelper.KEY_CATEGORY_ID, categories.get(viewPager.getCurrentItem()));
-        mDb.insert(MovementDBHelper.TABLE_MOVEMENT_CATEGORIES, );
+        movementCategories.put(MovementDBHelper.KEY_MOVEMENT_ID, movementId);
+        movementCategories.put(MovementDBHelper.KEY_CATEGORY_ID, categoryId);
+        mDb.insert(MovementDBHelper.TABLE_MOVEMENT_CATEGORIES, null, movementCategories);
+
+        // Update the recycler view fragment in the tab that is shown
+        DataUpdateListener dataUpdateListener = (DataUpdateListener) this;
+        dataUpdateListener.onDataUpdated(getAllMovementsFromCategory(categories.get(viewPager.getCurrentItem())));
+
+    }
+
+    @Override
+    public void onCategoryDataPassed(ContentValues cv) {
+        mDb.insert(MovementDBHelper.TABLE_CATEGORY, null, cv);
     }
 
     @Override

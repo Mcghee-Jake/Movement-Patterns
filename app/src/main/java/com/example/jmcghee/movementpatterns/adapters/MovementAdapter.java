@@ -60,7 +60,6 @@ public class MovementAdapter extends RecyclerView.Adapter<MovementAdapter.Moveme
         final Movement movement = movementList.get(position);
         final String movementName = movement.getName();
         holder.tvMovementName.setText(movementName);
-        final String movementCatagoryy = movement.getCategory();
         holder.btnMovementOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -12,13 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.jmcghee.movementpatterns.R;
+import com.example.jmcghee.movementpatterns.activities.MovementIndexActivity;
 import com.example.jmcghee.movementpatterns.adapters.MovementAdapter;
 import com.example.jmcghee.movementpatterns.data.Movement;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class MovementIndexFragment extends Fragment {
+public class MovementIndexFragment extends Fragment implements MovementIndexActivity.DataUpdateListener {
     private static final String MOVEMENT_KEY = "movement_key";
     private List<Movement> movementsList;
     private MovementAdapter adapter;
@@ -51,7 +52,8 @@ public class MovementIndexFragment extends Fragment {
         return viewGroup;
     }
 
-    public interface MovementDataChangeListener{
-        void onMovementDataChanged(List<Movement> movementList);
+    @Override
+    public void onDataUpdated(List<Movement> movementList) {
+        adapter.updateMovementsList(movementList);
     }
 }

@@ -40,6 +40,7 @@ public class MovementIndexActivity extends AppCompatActivity implements
 
     private SQLiteDatabase mDb;
     private List<String> categories;
+    private CategoryPagerAdapter pagerAdapter;
     private ViewPager viewPager;
 
 
@@ -59,7 +60,7 @@ public class MovementIndexActivity extends AppCompatActivity implements
 
         // Set up the ViewPager
         viewPager = findViewById(R.id.view_pager);
-        PagerAdapter pagerAdapter = new CategoryPagerAdapter(getSupportFragmentManager());
+        pagerAdapter = new CategoryPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
 
         // Set up the tab layout
@@ -101,6 +102,11 @@ public class MovementIndexActivity extends AppCompatActivity implements
         @Override
         public CharSequence getPageTitle(int position) {
             return categories.get(position);
+        }
+
+        public void updateCategories() {
+            categories = getAllCategories();
+            notifyDataSetChanged();
         }
     }
 
@@ -167,9 +173,7 @@ public class MovementIndexActivity extends AppCompatActivity implements
                 null,
                 null
                 );
-
         long categoryId = cursor.getLong(cursor.getColumnIndex(MovementDBHelper.KEY_MOVEMENT_ID));
-
         ContentValues movementCategories = new ContentValues();
         movementCategories.put(MovementDBHelper.KEY_MOVEMENT_ID, movementId);
         movementCategories.put(MovementDBHelper.KEY_CATEGORY_ID, categoryId);
@@ -184,6 +188,7 @@ public class MovementIndexActivity extends AppCompatActivity implements
     @Override
     public void onCategoryDataPassed(ContentValues cv) {
         mDb.insert(MovementDBHelper.TABLE_CATEGORY, null, cv);
+        pagerAdapter.updateCategories();
     }
 
     @Override
